@@ -48,3 +48,62 @@
 | `item_id`    | `BIGINT`    | `NOT NULL`, `FOREIGN KEY`, `UNIQUE`  |
 | `created_at` | `DATETIME`  | `NOT NULL`                           |
 | `updated_at` | `DATETIME`  | `NOT NULL`                           |
+
+### addresses テーブル
+
+| カラム名          | 型          | 制約                                 |
+| :---------------- | :---------- | :----------------------------------- |
+| `id`              | `BIGINT`    | `PRIMARY KEY`, `NOT NULL`, `AUTO_INCREMENT` |
+| `post_code`       | `VARCHAR(255)` | `NOT NULL`                           |
+| `prefecture_id`   | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
+| `city`            | `VARCHAR(255)` | `NOT NULL`                           |
+| `block`           | `VARCHAR(255)` | `NOT NULL`                           |
+| `building_name`   | `VARCHAR(255)` | `NULL` (任意項目)                    |
+| `phone_number`    | `VARCHAR(255)` | `NOT NULL`                           |
+| `order_id`        | `BIGINT`    | `NOT NULL`, `FOREIGN KEY`, `UNIQUE`  |
+| `created_at`      | `DATETIME`  | `NOT NULL`                           |
+| `updated_at`      | `DATETIME`  | `NOT NULL`                           |
+
+## アソシエーション（関連性）
+
+フリマアプリのデータベースにおける主要な4つのテーブル（`users`, `items`, `orders`, `addresses`）は、以下のように関連付けられています。
+
+### 1. `users` テーブル
+
+* **`has_many :items`**
+    * **関連性**: `1対多 (One-to-Many)`
+    * **説明**: 一人の`ユーザー`は、複数の`商品`を**出品**することができます。
+
+* **`has_many :orders`**
+    * **関連性**: `1対多 (One-to-Many)`
+    * **説明**: 一人の`ユーザー`は、複数の`商品`を**購入**することができます。
+
+### 2. `items` テーブル
+
+* **`belongs_to :user`**
+    * **関連性**: `多対1 (Many-to-One)`
+    * **説明**: 一つの`商品`は、必ず一人の`ユーザー`によって**出品**されます。
+
+* **`has_one :order`**
+    * **関連性**: `1対1 (One-to-One)`
+    * **説明**: 一つの`商品`は、**一つの`購入履歴`にのみ紐づきます**。（商品が購入されると、その商品はそれ以上購入されないため）
+
+### 3. `orders` テーブル
+
+* **`belongs_to :user`**
+    * **関連性**: `多対1 (Many-to-One)`
+    * **説明**: 一つの`購入履歴`は、必ず一人の`ユーザー`によって**行われます**。
+
+* **`belongs_to :item`**
+    * **関連性**: `多対1 (Many-to-One)`
+    * **説明**: 一つの`購入履歴`は、必ず一つの`商品`に**紐づきます**。
+
+* **`has_one :address`**
+    * **関連性**: `1対1 (One-to-One)`
+    * **説明**: 一つの`購入履歴`には、一つの`配送先住所`が**紐づきます**。
+
+### 4. `addresses` テーブル (新規)
+
+* **`belongs_to :order`**
+    * **関連性**: `多対1 (Many-to-One)`
+    * **説明**: 一つの`配送先住所`は、一つの`購入履歴`に**属します**。
