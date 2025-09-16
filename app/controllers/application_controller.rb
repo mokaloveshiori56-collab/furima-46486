@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # 開発環境とテスト環境でのみBasic認証を有効にする場合
   # production環境でもBasic認証が必要なら if Rails.env.production? に変更
-  before_action :basic_auth if Rails.env.development? || Rails.env.test?
+  before_action :basic_auth unless Rails.env.test?
 
   private
 
