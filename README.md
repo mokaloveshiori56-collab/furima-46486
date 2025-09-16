@@ -2,69 +2,57 @@
 
 ## 概要
 フリマアプリの主要機能であるユーザー管理、商品出品、商品購入をサポートするためのデータベース設計を記述します。
+配送先情報を管理する`addresses`テーブルを追加しました。
+
+## ER図
 
 ## テーブル定義
 
 ### users テーブル
 
-| カラム名            | 型          | 制約                                 |
-| :------------------ | :---------- | :----------------------------------- |
-| `id`                | `BIGINT`    | `PRIMARY KEY`, `NOT NULL`, `AUTO_INCREMENT` |
-| `nickname`          | `VARCHAR(255)` | `NOT NULL`                           |
-| `email`             | `VARCHAR(255)` | `NOT NULL`, `UNIQUE`                 |
-| `encrypted_password` | `VARCHAR(255)` | `NOT NULL`                           |
-| `first_name`        | `VARCHAR(255)` | `NOT NULL`                           |
-| `last_name`         | `VARCHAR(255)` | `NOT NULL`                           |
-| `first_name_kana`   | `VARCHAR(255)` | `NOT NULL`                           |
-| `last_name_kana`    | `VARCHAR(255)` | `NOT NULL`                           |
-| `birth_date`        | `DATE`      | `NOT NULL`                           |
-| `created_at`        | `DATETIME`  | `NOT NULL`                           |
-| `updated_at`        | `DATETIME`  | `NOT NULL`                           |
+| カラム名            | 型       | 制約           |
+| :------------------ | :------- | :------------- |
+| `nickname`          | `string` | `null: false`  |
+| `email`             | `string` | `null: false`, `unique: true` |
+| `encrypted_password` | `string` | `null: false`  |
+| `first_name`        | `string` | `null: false`  |
+| `last_name`         | `string` | `null: false`  |
+| `first_name_kana`   | `string` | `null: false`  |
+| `last_name_kana`    | `string` | `null: false`  |
+| `birth_date`        | `date`   | `null: false`  |
 
 ### items テーブル
 
-| カラム名          | 型          | 制約                                 |
-| :---------------- | :---------- | :----------------------------------- |
-| `id`              | `BIGINT`    | `PRIMARY KEY`, `NOT NULL`, `AUTO_INCREMENT` |
-| `item_name`       | `VARCHAR(255)` | `NOT NULL`                           |
-| `description`     | `TEXT`      | `NOT NULL`                           |
-| `category_id`     | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
-| `condition_id`    | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
-| `shipping_fee_id` | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
-| `prefecture_id`   | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
-| `shipping_day_id` | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
-| `price`           | `INTEGER`   | `NOT NULL`, `>300, <9,999,999`      |
-| `user_id`         | `BIGINT`    | `NOT NULL`, `FOREIGN KEY`            |
-| `created_at`      | `DATETIME`  | `NOT NULL`                           |
-| `updated_at`      | `DATETIME`  | `NOT NULL`                           |
-| `image`           | (Active Storageで管理) |                              |
+| カラム名          | 型       | 制約           |
+| :---------------- | :------- | :------------- |
+| `item_name`       | `string` | `null: false`  |
+| `description`     | `text`   | `null: false`  |
+| `category_id`     | `integer`| `null: false`  |
+| `condition_id`    | `integer`| `null: false`  |
+| `shipping_fee_id` | `integer`| `null: false`  |
+| `prefecture_id`   | `integer`| `null: false`  |
+| `shipping_day_id` | `integer`| `null: false`  |
+| `price`           | `integer`| `null: false`  |
+| `user_id`         | `bigint` | `null: false`  |
+| `image`           | (Active Storageで管理) | |
 
 ### orders テーブル
 
-| カラム名     | 型          | 制約                                 |
-| :----------- | :---------- | :----------------------------------- |
-| `id`         | `BIGINT`    | `PRIMARY KEY`, `NOT NULL`, `AUTO_INCREMENT` |
-| `user_id`    | `BIGINT`    | `NOT NULL`, `FOREIGN KEY`            |
-| `item_id`    | `BIGINT`    | `NOT NULL`, `FOREIGN KEY`, `UNIQUE`  |
-| `created_at` | `DATETIME`  | `NOT NULL`                           |
-| `updated_at` | `DATETIME`  | `NOT NULL`                           |
+| カラム名     | 型       | 制約           |
+| :----------- | :------- | :------------- |
+| `user_id`    | `bigint` | `null: false`  |
+| `item_id`    | `bigint` | `null: false`  |
 
 ### addresses テーブル
 
-| カラム名          | 型          | 制約                                 |
-| :---------------- | :---------- | :----------------------------------- |
-| `id`              | `BIGINT`    | `PRIMARY KEY`, `NOT NULL`, `AUTO_INCREMENT` |
-| `post_code`       | `VARCHAR(255)` | `NOT NULL`                           |
-| `prefecture_id`   | `INTEGER`   | `NOT NULL`, `FOREIGN KEY`            |
-| `city`            | `VARCHAR(255)` | `NOT NULL`                           |
-| `block`           | `VARCHAR(255)` | `NOT NULL`                           |
-| `building_name`   | `VARCHAR(255)` | `NULL` (任意項目)                    |
-| `phone_number`    | `VARCHAR(255)` | `NOT NULL`                           |
-| `order_id`        | `BIGINT`    | `NOT NULL`, `FOREIGN KEY`, `UNIQUE`  |
-| `created_at`      | `DATETIME`  | `NOT NULL`                           |
-| `updated_at`      | `DATETIME`  | `NOT NULL`                           |
-
-## アソシエーション（関連性）
+| カラム名       | 型       | 制約           |
+| :------------- | :------- | :------------- |
+| `post_code`    | `string` | `null: false`  |
+| `prefecture_id`| `integer`| `null: false`  |
+| `city`         | `string` | `null: false`  |
+| `block`        | `string` | `null: false`  |
+| `building_name`| `string` |                | | `phone_number` | `string` | `null: false`  |
+| `order`        | `references` | `null: false`  | ## アソシエーション（関連性）
 
 フリマアプリのデータベースにおける主要な4つのテーブル（`users`, `items`, `orders`, `addresses`）は、以下のように関連付けられています。
 
@@ -102,7 +90,7 @@
     * **関連性**: `1対1 (One-to-One)`
     * **説明**: 一つの`購入履歴`には、一つの`配送先住所`が**紐づきます**。
 
-### 4. `addresses` テーブル (新規)
+### 4. `addresses` テーブル
 
 * **`belongs_to :order`**
     * **関連性**: `多対1 (Many-to-One)`
