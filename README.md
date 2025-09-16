@@ -33,15 +33,15 @@
 | `prefecture_id`   | `integer`| `null: false`  |
 | `shipping_day_id` | `integer`| `null: false`  |
 | `price`           | `integer`| `null: false`  |
-| `user_id`         | `bigint` | `null: false`  |
+| `user`            | `references` | `null: false`, `foreign_key: true` | 
 | `image`           | (Active Storageで管理) | |
 
 ### orders テーブル
 
 | カラム名     | 型       | 制約           |
 | :----------- | :------- | :------------- |
-| `user_id`    | `bigint` | `null: false`  |
-| `item_id`    | `bigint` | `null: false`  |
+| `user`       | `references` | `null: false`, `foreign_key: true` | 
+| `item`       | `references` | `null: false`, `foreign_key: true` | 
 
 ### addresses テーブル
 
@@ -51,8 +51,11 @@
 | `prefecture_id`| `integer`| `null: false`  |
 | `city`         | `string` | `null: false`  |
 | `block`        | `string` | `null: false`  |
-| `building_name`| `string` |                | | `phone_number` | `string` | `null: false`  |
-| `order`        | `references` | `null: false`  | ## アソシエーション（関連性）
+| `building_name`| `string` |                |
+| `phone_number` | `string` | `null: false`  |
+| `order`        | `references` | `null: false`, `foreign_key: true` | 
+
+## アソシエーション（関連性）
 
 フリマアプリのデータベースにおける主要な4つのテーブル（`users`, `items`, `orders`, `addresses`）は、以下のように関連付けられています。
 
