@@ -13,3 +13,51 @@
  *= require_tree .
  *= require_self
  */
+.header {
+  width: 100%;
+  background-color: white;
+  padding: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1020px; /* 画像のレイアウトに合わせた幅 */
+  padding: 0 24px;
+}
+
+.nav__list {
+  display: flex;
+  list-style: none; /* リストの黒点を消す */
+  margin: 0;
+  padding: 0;
+}
+
+.nav__list li {
+  margin-left: 20px; /* 項目間の余白 */
+}
+
+.nav__list a {
+  text-decoration: none; /* 下線を消す */
+  color: #333;
+  font-size: 14px;
+}
+
+/* ログインと新規登録ボタン用のスタイルを適用 */
+.nav__list li:last-child {
+  margin-left: 10px;
+}
+.nav__list li:last-child a {
+  color: #0099e8;
+  font-weight: bold;
+}
+
+/* ロゴのサイズ調整 */
+.header__left img {
+  height: 40px; /* ロゴの高さ */
+}
