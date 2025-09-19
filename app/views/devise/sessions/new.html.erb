@@ -1,41 +1,33 @@
-<div class='registration-main'>
-  <h2 class='form-header-text'>ログイン</h2>
+<%= render "shared/second-header"%>
 
-  <%# Deviseのログインフォームは model: resource, as: resource_name, url: session_path(resource_name) を使います %>
-  <%= form_with model: resource, as: resource_name, url: session_path(resource_name), class: 'registration-form', local: true do |f| %>
-
-    <%# フラッシュメッセージ (login-flash-message はDeviseのエラーメッセージとは別) %>
-    <div class='login-flash-message'>
-      <%= flash[:notice] %>
-      <%= flash[:alert] %>
+<%= form_with model: resource, as: resource_name, url: session_path(resource_name), class: 'registration-main', local: true do |f| %>
+  <div class='form-wrap'>
+    <div class='form-header'>
+      <h1 class='form-header-text'>
+        会員情報入力
+      </h1>
     </div>
+    
+    <%= render "devise/shared/error_messages", model: @user %>
 
-    <%# メールアドレス %>
     <div class="form-group">
       <div class='form-text-wrap'>
         <label class="form-text">メールアドレス</label>
         <span class="indispensable">必須</span>
       </div>
-      <%= f.email_field :email, class:"input-default", id:"email", placeholder:"PC・携帯どちらでも可", autofocus: true, autocomplete: "email" %>
+      <%= f.email_field :email, class:"input-default", id:"email", placeholder:"PC・携帯どちらでも可", autofocus: true %>
     </div>
-
-    <%# パスワード %>
     <div class="form-group">
       <div class='form-text-wrap'>
         <label class="form-text">パスワード</label>
         <span class="indispensable">必須</span>
       </div>
-      <%= f.password_field :password, class:"input-default", id:"password", placeholder:"", autocomplete: "current-password" %>
+      <%= f.password_field :password, class:"input-default", id:"password", placeholder:"" %>
     </div>
-
-    <%# ログインボタン %>
-    <div class='login-btn-wrap'>
-      <%= f.submit "ログイン" ,class:"login-red-btn" %>
+    <div class='login-btn'>
+      <%= f.submit "ログイン", class:"login-red-btn" %>
     </div>
+  </div>
+<% end %>
 
-    <%# 他の認証関連リンク (新規登録、パスワードリセットなど) %>
-    <%= render "devise/shared/links" %>
-
-  <% end %> <%# form_with の終了 %>
-
-</div> <%# registration-main の終了 %>
+<%= render "shared/second-footer"%>
