@@ -17,7 +17,26 @@ RSpec.describe User, type: :model do
         @user.valid?
         expect(@user.errors.full_messages).to include("Nickname can't be blank")
       end
-      # 他のバリデーションテストも同様に記述
+      it 'メールアドレスが空では登録できない' do
+        @user.email = ''
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Eメールを入力してください')
+      end
+      it '重複したメールアドレスでは登録できない' do
+        # 既に存在するユーザーを作成
+        @user.save
+        # 重複したメールアドレスを持つユーザーを作成
+        another_user = FactoryBot.build(:user, email: @user.email)
+        another_user.valid?
+        expect(another_user.errors.full_messages).to include('Eメールはすでに存在します')
+      end
+
+      it 'パスワードが6文字未満では登録できない' do
+        @user.password = '123ab'
+        @user.password_confirmation = '123ab'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('パスワードは6文字以上で入力してください')
+      end
     end
   end
 end
