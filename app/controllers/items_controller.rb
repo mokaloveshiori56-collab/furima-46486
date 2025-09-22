@@ -5,7 +5,6 @@ class ItemsController < ApplicationController
   end
 
   def new
-    # 商品出品フォームで使うためのItemモデルのインスタンスを生成
     @item = Item.new
   end
 
@@ -14,10 +13,11 @@ class ItemsController < ApplicationController
     if @item.save
       redirect_to root_path, notice: '商品を出品しました'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
-   private
+
+  private
 
   def item_params
     params.require(:item).permit(
@@ -26,4 +26,3 @@ class ItemsController < ApplicationController
     ).merge(user_id: current_user.id)
   end
 end
-

@@ -10,7 +10,7 @@ class Item < ApplicationRecord
   belongs_to :prefecture
   belongs_to :days_to_ship
 
-with_options presence: true do
+  with_options presence: true do
     validates :image
     validates :item_name
     validates :item_description
@@ -27,4 +27,3 @@ with_options presence: true do
     validates :days_to_ship_id
   end
 end
-
