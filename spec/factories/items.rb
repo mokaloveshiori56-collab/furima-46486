@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :item do
     association :user # ItemモデルがUserモデルに属することを定義
-    
+
     # バリデーションに合う適切な値を設定
     item_name              { Faker::Commerce.product_name }
     item_description       { Faker::Lorem.sentence }
