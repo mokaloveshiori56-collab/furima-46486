@@ -4,8 +4,8 @@
   </header>
   <div class="items-sell-main">
     <h2 class="items-sell-title">商品の情報を入力</h2>
-    <%= form_with model: @item, url: items_path, class: 'registration-main', local: true do |f| %>
-    <%= render 'shared/error_messages', model: @model %>
+    <%= form_with model: @item, url: item_path(@item), method: :patch, class: , local: true do |f| %>
+    <%= render 'shared/error_messages', model: @item %>
 
     <%# 商品画像 %>
     <div class="img-upload">
@@ -134,8 +134,8 @@
     <%# /注意書き %>
     <%# 下部ボタン %>
     <div class="sell-btn-contents">
-      <%= f.submit "出品する" ,class:"sell-btn" %>
-      <%=link_to 'もどる', root_path, class:"back-btn" %>
+      <%= f.submit "変更する" ,class:"sell-btn" %>
+      <%=link_to 'もどる', item_path(@item), class:"back-btn" %>
     </div>
     <%# /下部ボタン %>
   </div>
