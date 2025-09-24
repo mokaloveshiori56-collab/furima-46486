@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_19_092941) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_24_074924) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_19_092941) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "addresses", charset: "utf8mb3", force: :cascade do |t|
+    t.string "postal_code"
+    t.integer "prefecture_id"
+    t.string "city"
+    t.string "street_address"
+    t.string "building_name"
+    t.string "phone_number"
+    t.bigint "purchase_record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchase_record_id"], name: "index_addresses_on_purchase_record_id"
+  end
+
   create_table "items", charset: "utf8mb3", force: :cascade do |t|
     t.string "item_name"
     t.text "item_description"
@@ -52,6 +65,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_19_092941) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_items_on_user_id"
+  end
+
+  create_table "purchase_records", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_purchase_records_on_item_id"
+    t.index ["user_id"], name: "index_purchase_records_on_user_id"
   end
 
   create_table "users", charset: "utf8mb3", force: :cascade do |t|
@@ -74,5 +96,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_19_092941) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "purchase_records"
   add_foreign_key "items", "users"
+  add_foreign_key "purchase_records", "items"
+  add_foreign_key "purchase_records", "users"
 end
