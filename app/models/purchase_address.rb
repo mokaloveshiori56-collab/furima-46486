@@ -14,17 +14,17 @@ class PurchaseAddress
   end
 
   def save
-    # 購入情報を保存
-    purchase_record = PurchaseRecord.create(user_id: user_id, item_id: item_id)
-    # 発送先情報を保存
-    Address.create(
-      prefecture_id: prefecture_id,
-      postal_code: postal_code,
-      city: city,
-      street_address: street_address,
-      building_name: building_name,
-      phone_number: phone_number,
-      purchase_record_id: purchase_record.id
-    )
+    ActiveRecord::Base.transaction do
+      purchase_record = PurchaseRecord.create!(user_id: user_id, item_id: item_id)
+      Address.create!(
+        prefecture_id: prefecture_id,
+        postal_code: postal_code,
+        city: city,
+        street_address: street_address,
+        building_name: building_name,
+        phone_number: phone_number,
+        purchase_record_id: purchase_record.id
+      )
+    end
   end
 end
