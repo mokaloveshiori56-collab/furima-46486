@@ -31,7 +31,7 @@
     </div>
     <%# /支払額の表示 %>
 
-    <%= form_with model: @purchase_address, url: item_orders_path(@item), class: 'transaction-form-wrap',local: true do |f| %>
+    <%= form_with model: @purchase_address, url: item_orders_path(@item), class: 'transaction-form-wrap', id: "purchase_form",local: true do |f| %>
     <%= render 'shared/error_messages', model: @purchase_address %>
     <%# カード情報の入力 %>
     <div class='credit-card-form'>
@@ -44,7 +44,7 @@
           <span class="indispensable">必須</span>
         </div>
         <div id="number-form" class="input-default"></div>
-        <%= f.hidden_field :token %>
+        <%= f.hidden_field :token, id: "token" %>
         <div class='available-card'>
           <%= image_tag 'card-visa.gif', class: 'card-logo'%>
           <%= image_tag 'card-mastercard.gif', class: 'card-logo'%>
