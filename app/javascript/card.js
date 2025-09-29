@@ -1,20 +1,52 @@
 const pay = () => {
-  const form = document.getElementById("purchase_form"); 
+  // 環境変数から公開鍵を取得（テスト公開鍵を直接代入してください）
+  const PAYJP_PUBLIC_KEY = "pk_test_f4867cf3cf2649879ce7fdf0"; // 例: pk_test_xxxxxxx
+  if (!PAYJP_PUBLIC_KEY) return; 
+  
+  // 1. PAY.JPの初期化とElementsのセットアップ
+  const payjp = Payjp(PAYJP_PUBLIC_KEY);
+  const elements = payjp.elements();
+  
+  // 各カード情報入力フィールドのDOMを取得
+  const numberElement = elements.create('cardNumber');
+  const expiryElement = elements.create('cardExpiry');
+  const cvcElement = elements.create('cardCvc');
+
+  // 各フィールドをHTMLの指定されたIDにマウント
+  numberElement.mount('#number-form');
+  expiryElement.mount('#expiry-form');
+  cvcElement.mount('#cvc-form');
+
+  // 2. フォーム送信時のイベント処理
+  const form = document.getElementById('purchase_form'); // フォームのIDに合わせて修正
   if (!form) return;
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault(); 
-
-     const tokenInput = document.getElementById("token"); 
-
-     if (!tokenInput) {
-      console.error("エラー: ID 'token' の要素が見つかりませんでした。");
-      return; // 要素がないため処理を中断
-    }
+    e.preventDefault(); // デフォルトのフォーム送信を阻止！
     
-    // 値を読み込む
-    console.log("トークンの値 (hidden):", tokenInput.value); 
-    
+    // 3. トークン生成処理の開始
+    payjp.createToken(numberElement).then(function (response) {
+      // response の中身をデバッグで確認する
+      
+      if (response.error) {
+        // エラー処理: トークン生成失敗
+        alert("カード情報に誤りがあります。");
+        // サーバー側にエラーを返すため、そのままフォームを送信
+        form.submit();
+      } else {
+        // 成功処理: トークンをフォームの既存の隠しフィールドに格納
+        const token = response.id;
+        
+        // 既存の隠しフィールド (f.hidden_field :token, id: "token") を取得
+        const tokenInput = document.getElementById("token"); 
+        
+        // トークンIDを隠しフィールドのvalueに設定
+        tokenInput.value = token;
+
+        // サーバーへフォームを送信
+        form.submit();
+      }
+    });
   });
 };
 

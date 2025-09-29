@@ -3,6 +3,8 @@ class OrdersController < ApplicationController
   def index
     @item = Item.find(params[:item_id])
     @purchase_address = PurchaseAddress.new
+
+    gon.payjp_public_key = ENV['PAYJP_PUBLIC_KEY']
   end
 
   def create
