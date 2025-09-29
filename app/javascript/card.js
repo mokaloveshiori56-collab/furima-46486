@@ -1,7 +1,8 @@
 const pay = () => {
-  // 環境変数から公開鍵を取得（テスト公開鍵を直接代入してください）
-  const PAYJP_PUBLIC_KEY = "pk_test_f4867cf3cf2649879ce7fdf0"; // 例: pk_test_xxxxxxx
+  const PAYJP_PUBLIC_KEY = window.PAYJP_PUBLIC_KEY;
   if (!PAYJP_PUBLIC_KEY) return; 
+
+  Payjp.setPublicKey(PAYJP_PUBLIC_KEY);
   
   // 1. PAY.JPの初期化とElementsのセットアップ
   const payjp = Payjp(PAYJP_PUBLIC_KEY);
