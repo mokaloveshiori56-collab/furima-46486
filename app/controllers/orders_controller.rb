@@ -1,14 +1,13 @@
 class OrdersController < ApplicationController
-  before_action :authenticate_user!
-  def index
-    @item = Item.find(params[:item_id])
-    @purchase_address = PurchaseAddress.new
+  before_action :authenticate_user!, only: [:index, :create]
+  before_action :set_item, only: [:index, :create]
+  before_action :check_item_status, only: [:index, :create]
 
-    gon.payjp_public_key = ENV['PAYJP_PUBLIC_KEY']
+  def index
+    @purchase_address = PurchaseAddress.new
   end
 
   def create
-    @item = Item.find(params[:item_id])
     @purchase_address = PurchaseAddress.new(purchase_params)
     if @purchase_address.valid?
       pay_item
@@ -17,13 +16,29 @@ class OrdersController < ApplicationController
     else
       render :index, status: :unprocessable_entity
     end
+  rescue Payjp::CardError
+    # Payjpでの決済が失敗した場合（カード情報のエラーなど）
+    @purchase_address.errors.add(:base, 'カード情報に誤りがあります。')
+    render :index, status: :unprocessable_entity
   end
 
   private
 
+  def set_item
+    @item = Item.find_by(id: params[:item_id])
+    redirect_to root_path unless @item
+  end
+
+  def check_item_status
+    return unless @item.user_id == current_user.id || @item.purchase_record.present?
+
+    redirect_to root_path
+  end
+
   def pay_item
     # 秘密鍵を環境変数から取得
     Payjp.api_key = ENV['PAYJP_SECRET_KEY']
+
     Payjp::Charge.create(
       amount: @item.price, # 商品の価格（テーブルから取得）
       card: purchase_params[:token], # JavaScriptから送られたトークンID
