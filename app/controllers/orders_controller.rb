@@ -4,6 +4,7 @@ class OrdersController < ApplicationController
   before_action :check_item_status, only: [:index, :create]
 
   def index
+    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
     @purchase_address = PurchaseAddress.new
   end
 

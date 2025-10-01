@@ -1,13 +1,7 @@
 const pay = () => {
-  const PAYJP_PUBLIC_KEY = window.PAYJP_PUBLIC_KEY;
-  if (!PAYJP_PUBLIC_KEY) return; 
-
-  Payjp.setPublicKey(PAYJP_PUBLIC_KEY);
-  
-  // 1. PAY.JPの初期化とElementsのセットアップ
-  const payjp = Payjp(PAYJP_PUBLIC_KEY);
+  const publicKey = gon.public_key;
+  const payjp = Payjp(publicKey);
   const elements = payjp.elements();
-  
   // 各カード情報入力フィールドのDOMを取得
   const numberElement = elements.create('cardNumber');
   const expiryElement = elements.create('cardExpiry');
