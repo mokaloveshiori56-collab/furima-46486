@@ -4,6 +4,7 @@ class Item < ApplicationRecord
   has_one :purchase_record
 
   def sold_out?
+    purchase_record.present?
   end
 
   extend ActiveHash::Associations::ActiveRecordExtensions

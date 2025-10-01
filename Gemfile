@@ -30,6 +30,8 @@ gem 'devise'
 
 gem 'active_hash'
 
+gem 'gon'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -55,6 +57,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0.0'
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'pry-rails'
 end
 
 group :development do
@@ -82,3 +85,6 @@ gem 'image_processing', '~> 1.10'
 group :production do
   gem 'pg'
 end
+
+gem 'payjp'
+gem 'gon'
