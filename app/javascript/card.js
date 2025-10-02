@@ -16,7 +16,6 @@ const pay = () => {
   form.addEventListener("submit", (e) => {
    payjp.createToken(numberElement).then(function (response) {
       if (response.error) {
-        submitBtn.removeAttribute("disabled"); 
       } else {
         const token = response.id;
         const renderDom = document.getElementById('purchase_form');
