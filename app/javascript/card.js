@@ -1,7 +1,9 @@
 const pay = () => {
-  const publicKey = gon.public_key;
-  const payjp = Payjp(publicKey);
+  const publicKey = gon.public_key
+  const payjp = Payjp(publicKey) 
+  // 1. PAY.JPの初期化とElementsのセットアップ
   const elements = payjp.elements();
+  
   // 各カード情報入力フィールドのDOMを取得
   const numberElement = elements.create('cardNumber');
   const expiryElement = elements.create('cardExpiry');
@@ -12,53 +14,35 @@ const pay = () => {
   expiryElement.mount('#expiry-form');
   cvcElement.mount('#cvc-form');
 
-  const form = document.getElementById('purchase_form'); 
-  if (!form) return; 
+  // 2. フォーム送信時のイベント処理
+  const form = document.getElementById('purchase_form'); // フォームのIDに合わせて修正
+  if (!form) return;
 
   form.addEventListener("submit", (e) => {
-    // 1. フォームの標準送信を最初に止める！ (非同期処理のため必須)
-    e.preventDefault(); 
+    e.preventDefault(); // デフォルトのフォーム送信を阻止！
     
-    // 2. ボタンを無効化し、二重送信を防ぐ
-    const submitBtn = document.getElementById("button");
-    if (submitBtn) {
-      submitBtn.setAttribute("disabled", true); 
-    }
-
+    // 3. トークン生成処理の開始
     payjp.createToken(numberElement).then(function (response) {
+      // response の中身をデバッグで確認する
+      
       if (response.error) {
-        // 🚨 失敗時: トークン生成失敗
-        
-        // ボタンを有効に戻す
-        if (submitBtn) {
-          submitBtn.removeAttribute("disabled"); 
-        }
-        
-        // カード情報クリア（再入力を促す）
-        numberElement.clear();
-        expiryElement.clear();
-        cvcElement.clear();
-        
-        // ここでエラーメッセージをページ内に表示する処理を追加
-
+        // エラー処理: トークン生成失敗
+        // サーバー側にエラーを返すため、そのままフォームを送信
+        form.submit();
       } else {
-        // ✅ 成功時: トークンをhiddenフィールドにセットし、フォームを送信
+        // 成功処理: トークンをフォームの既存の隠しフィールドに格納
         const token = response.id;
         
-        // 既存の hidden field にトークンをセット（HTMLで f.hidden_field :token, id: "token" がある前提）
-        const tokenInput = document.getElementById("token");
-        tokenInput.value = token;
+        // 既存の隠しフィールド (f.hidden_field :token, id: "token") を取得
+        const tokenInput = document.getElementById("token"); 
         
-        // カード情報クリア
-        numberElement.clear();
-        expiryElement.clear();
-        cvcElement.clear();
+        // トークンIDを隠しフィールドのvalueに設定
+        tokenInput.value = token;
 
-        // 3. トークンがセットされた後でのみ、フォーム送信を実行！
+        // サーバーへフォームを送信
         form.submit();
       }
     });
-    // 🚨 非同期処理の外側では form.submit() を実行しない
   });
 };
 
