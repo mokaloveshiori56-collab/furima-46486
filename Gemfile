@@ -93,3 +93,4 @@ end
 
 gem 'payjp'
 gem 'gon'
+gem 'nokogiri', force_ruby_platform: true
